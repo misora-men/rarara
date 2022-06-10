@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- three.jsを読み込む(CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
+</head>
+<body>
+    <script>
+        var init = function() {
+// レンダラーを作成
+var renderer = new THREE.WebGLRenderer();
+// レンダラーのサイズを設定
+renderer.setSize(800, 600);
+// canvasをbodyに追加
+document.body.appendChild(renderer.domElement);
+// シーンを作成
+var scene = new THREE.Scene();
+// カメラを作成
+var camera = new THREE.PerspectiveCamera(45, 800 / 600, 1, 1000);
+// 平行光源を生成
+var light = new THREE.DirectionalLight(0xffffff);
+light.position.set(1, 1, 1);
+scene.add(light);
+
+var light = new THREE.DirectionalLight(0xffffff);
+light.position.set(-1, -1, -1);
+scene.add(light);
+// 箱を作成
+var geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+var material = new THREE.MeshPhongMaterial({ color: 0x0000ff ,wireframe:true});
+var box = new THREE.Mesh(geometry, material);
+box.position.set( 0.55, -0.6, -5);
+scene.add(box);
+
+var torusGeometry = new THREE.TorusGeometry( 0.3, 0.05, 6, 12 ); 
+var torusMaterial = new THREE. MeshPhongMaterial( { color: 0xfff8dc } );
+var torus = new THREE.Mesh( torusGeometry, torusMaterial );
+torus.position.set( -2, 1.2, -5);
+scene.add( torus );
+
+
+var torusKnotGeometry = new THREE.TorusKnotGeometry( 1, 0.3, 20, 6, 3, 8); 
+var torusKnotMaterial = new THREE. MeshPhongMaterial( { color: 0xee82ee } );
+var torusKnot = new THREE.Mesh( torusKnotGeometry, torusKnotMaterial );
+torusKnot.position.set( -2.5, 0.55, -15 );
+scene.add( torusKnot );
+
+ var geometry = new THREE.ConeGeometry( 5, 20, 32 );
+ var material = new THREE.MeshPhongMaterial( {color: 0xFF0000} );
+ var cone = new THREE.Mesh( geometry, material );
+ cone.position.set( 35, -25, -100);
+ scene.add( cone );
+
+
+
+// 描画
+renderer.render(scene, camera);
+
+
+
+// 初回実行
+var update = function() {
+requestAnimationFrame(update);
+// 箱を回転させる
+box.rotation.x += 0.01;
+box.rotation.y += 0.01;
+
+cone.rotation.x += 0.03;
+cone.rotation.y += 0.03;
+
+torusKnot.rotation.x += 0.06;
+torusKnot.rotation.y += 0.06;
+
+torus.rotation.x += 0.03;
+torus.rotation.y += 0.1;
+
+// camera.rotation.x += 0.01;
+// camera.rotation.y += 0.01;
+
+
+renderer.render(scene, camera);
+};
+update();
+}
+window.addEventListener('DOMContentLoaded', init);
+    </script>
+    
+</body>
+</html>
