@@ -1,0 +1,264 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+  </head>
+<body>
+ <script>
+      // ページの読み込みを待つ
+      window.addEventListener('DOMContentLoaded', init);
+
+      function init() {
+        // サイズを指定
+        const width = 800
+        const height = 600;
+
+        let angle=0;
+        let aaa=0.02;
+        let bbb=0.01;
+        let ccc=0;
+        let ddd=0;
+
+        // レンダラーを作成
+        var renderer = new THREE.WebGLRenderer();
+        document.body.appendChild(renderer.domElement);
+        renderer.setSize(width, height);
+
+        //renderer.shadowMap.enabled=true;
+
+        renderer.setClearColor(0x87ceeb);
+
+        // シーンを作成
+        const scene = new THREE.Scene();
+
+        // カメラを作成
+        const camera = new THREE.PerspectiveCamera(45, width / height);
+        // カメラの初期座標を設定
+        camera.position.set(7, 3, 5);
+
+        // カメラコントローラーを作成
+        const controls = new THREE.OrbitControls(camera, document.body); 
+        
+        // 平行光源1
+        var directionalLight1 = new THREE.DirectionalLight(0xffffff);
+        directionalLight1.position.set(5, 5, 5);
+        // シーンに追加
+        //directionalLight1.castShadow=true;
+        scene.add(directionalLight1);
+        // 平行光源2
+        var directionalLight2 = new THREE.DirectionalLight(0x888888);
+        directionalLight2.position.set(-10, -10, 10);
+        // シーンに追加
+        //directionalLight2.castShadow=true;
+        scene.add(directionalLight2);
+
+        // var light = new THREE.SpotLight(0xffffff, 1, 100, Math.PI / 20, 0.2);
+        // light.position.set(1,5, 5);
+
+        // ライトに影を有効にする
+        //light.castShadow = true;
+
+        // helper
+        // const gridHelper = new THREE.GridHelper(2,10); // size, step
+        // scene.add(gridHelper);
+        // const axisHelper = new THREE.AxisHelper(5); //軸の長さ　X：赤、Y：緑、z：青
+        // scene.add(axisHelper);
+
+        // テクスチャー読み込み
+        var textureLoader = new THREE.TextureLoader();  
+        var texture = textureLoader.load("stone.jpg");
+        var mat = new THREE.MeshPhongMaterial();
+        mat.map = texture;
+  
+        // バンプマップ読み込み
+        var bump = textureLoader.load("stone-bump.jpg");
+        mat.bumpMap = bump;
+        mat.bumpscale = 0.2;
+
+
+        var Geometry12 = new THREE.PlaneGeometry(50,50,10,10); //縦、横、分割数、分割数
+        var Material12 = new THREE.MeshBasicMaterial({color: 0xdeb887});
+        var plan = new THREE.Mesh(Geometry12,Material12);
+        //plan.receiveShadow=true;
+        plan.rotation.set( -Math.PI/2, 0, 0 );
+        plan.position.set(0,0,0);
+        
+        
+        
+
+        // 頭を作成
+        var head_g = new THREE.SphereGeometry( 0.5, 20, 32 );
+        var material_b = new THREE.MeshPhongMaterial({ color: 0xffdab9 });
+        var head = new THREE.Mesh(head_g, material_b);
+        head.castShadow = true;
+        head.position.set(0,0.8,0);//allの中心が原点になる
+
+        
+        //tuba
+        var  tuba= new THREE.ConeGeometry( 0.5,0.3, 32 );
+        var material8 = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        var tuba1 = new THREE.Mesh( tuba, material8);
+        tuba1.castShadow = true;
+        tuba1.position.set(0.2,0.95,0.2);
+        tuba1.rotation.y = 0.7;
+
+        //ヘルメット
+        var head5 = new THREE.SphereGeometry( 0.55, 20, 32,0,3.1415,0,3.1415 );
+        var material5 = new THREE.MeshPhongMaterial({ color: 0xffffff });
+        var head5 = new THREE.Mesh(head5, material5);
+        head5.rotation.x = 4.7;
+        head5.position.set(0,0.8,0);//allの中心が原点になる
+
+        //野球ボール
+        var head1 = new THREE.SphereGeometry( 0.1, 20, 32 );
+        // var material3 = new THREE.MeshPhongMaterial({ color: 0xffffff });
+        // var head4 = new THREE.Mesh(head1, material3);
+        var head4 = new THREE.Mesh(head1, mat);
+        head4.position.set(10,0,1.2);//allの中心が原点になる
+
+        //体を作成
+        var body_g = new THREE.ConeGeometry( 0.3, 0.7,50);
+        var material_r = new THREE.MeshPhongMaterial({ color: 0xffffff });
+        var body = new THREE.Mesh( body_g, material_r);
+        body.scale.y =1.5;
+        body.position.set(0,0.2,0);
+
+        //左足を作成
+        var leg_g = new THREE.SphereGeometry( 0.18, 32, 32 );
+        var material_l = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        var lleg = new THREE.Mesh( leg_g, material_l);
+        lleg.scale.z = 2;
+        lleg.scale.y = 0.7;
+        lleg.position.set(0.8,-0.8,0.2);
+        lleg.rotation.y=0.5;
+
+        //右足を作成
+        var rleg = new THREE.Mesh( leg_g, material_l);
+        rleg.scale.z = 2;
+        rleg.scale.y = 0.7;
+        rleg.position.set(-0.4,-0.8,0.2);
+        
+        //左腕を作成
+        var win_g = new THREE.SphereGeometry( 0.3, 32, 32 );
+        var material_w = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        var lwin = new THREE.Mesh( win_g, material_w);
+        lwin.scale.x = 0.3;
+        lwin.scale.z = 0.3;
+        //角度
+        lwin.rotation.z = 1.5;
+        lwin.rotation.y = 1;
+        head.castShadow = true;
+        lwin.position.set(0,0.2,0.3);
+
+        //右腕を作成
+        var rwin = new THREE.Mesh( win_g, material_w);
+        rwin.scale.x = 0.3;
+        rwin.scale.z = 0.3;
+        rwin.rotation.z = 1;
+        rwin.rotation.y = 0.8;
+        rwin.position.set(-0.2,0.25,0.2);
+        
+        //右手
+        var hand1 = new THREE.SphereGeometry( 0.2, 32, 32 );
+        var material_hand = new THREE.MeshLambertMaterial({ color: 0xffdab9 });
+        var hand = new THREE.Mesh( hand1, material_hand);
+        hand.position.set(-0.2,0.18,0.5);
+
+        //左手
+        var hand2 = new THREE.Mesh( hand1, material_hand);
+        hand2.position.set(-0.3,0.3,0.4);
+
+        //お尻
+        var siri = new THREE.SphereGeometry( 0.3, 20, 32 ,0,6.2831,0,-1.5);
+        var material1 = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        var siri1 = new THREE.Mesh(siri, material1);
+        siri1.rotation.x = 3.14;
+        //siri1.rotation.y = 1;
+        siri1.position.set(0,-0.3,0);//allの中心が原点になる
+
+        //バット
+        var batto = new THREE.ConeGeometry( 0.15, 2, 32 );
+        var material2 = new THREE.MeshPhongMaterial({ color: 0xffff00 });
+        var batto1 = new THREE.Mesh( batto, material2);
+        batto1.position.set(-0.6,0.8,0.2);
+        batto1.rotation.x = 3.2;
+        batto1.rotation.y = 0.7;
+        batto1.rotation.z= -0.7;
+
+       
+
+        
+        const pawapuro = new THREE.Group();
+        //pawapuro.castShadow=true;
+        pawapuro.add(head); // 頭を追加
+        pawapuro.add(body); //体を追加
+        pawapuro.add(lleg); //左足を追加
+        pawapuro.add(rleg); //右足を追加
+        pawapuro.add(siri1);
+        pawapuro.add(head4);
+        pawapuro.add(head5);
+        pawapuro.add(tuba1);
+        pawapuro.position.set(0,1,0);
+        pawapuro.add(pawapuro);
+        
+        plan.receiveShadow=true;
+        scene.add(plan);
+
+        //スイング動作
+        const furu = new THREE.Group();
+        furu.add(lwin); 
+        furu.add(rwin); 
+        furu.add(hand);
+        furu.add(hand2);
+        furu.add(batto1);
+
+
+        //全体のオブジェクト
+        const all = new THREE.Group();
+        plan.receiveShadow=true;
+        all.add(plan);//平面を追加
+        all.add(pawapuro); 
+        all.position.set(0,0,0);//全体グループの原点の位置
+        scene.add(all); 
+        all.add(furu); 
+        furu.position.set(0,1,0);//全体グループの原点の位置
+
+        update();
+        // 毎フレーム時に実行されるループイベントです
+        function update() {
+          // レンダリング
+          renderer.render(scene, camera);
+          requestAnimationFrame(update);
+          ccc=ccc+0.025;
+          
+          angle=angle+0.01;
+          if(angle>1){
+            
+            aaa=0;
+            bbb=0;
+          }
+          
+          furu.rotation.y += aaa;;
+          furu.rotation.x += bbb;;
+          
+          //furu.position.x += 0.01;;
+          //furu.rotation.x += -0.02;;
+          if(ccc<=2.45){
+          head4.position.set(3-ccc,0,1.2);
+          // //lleg.position.set(0,ccc,0);
+          }else if(ccc>2.45){
+          head4.position.set(ddd+0.5,ddd,1.2);
+          ddd=ddd+0.05;
+          camera.position.x +=0.05;;
+          camera.position.y +=0.05;;
+          }
+        
+        }
+      
+      }
+
+      
+    </script>
+</body>
+</html>
